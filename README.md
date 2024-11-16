@@ -188,7 +188,7 @@ The service provides:
 
 ## Related Services
 
-- [CAD Call Simulator](https://github.com/xdotcommer/cad-call-simulator) - A Python tool for simulating incident data
+- [CAD Call Simulator](https://github.com/xdotcommer/cad_call_simulator) - A Python tool for simulating incident data
 - [Call Service](https://github.com/xdotcommer/call_service) - Main call processing service
 - [APCO Service](https://github.com/xdotcommer/apco_incident_types_service) - APCO code lookup service
 - [Call Logger](https://github.com/xdotcommer/call_logger) - Persistent storage service for emergency call data
