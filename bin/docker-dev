@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+
+# Create this file at bin/docker-dev and make it executable:
+# chmod +x bin/docker-dev
+
+case "$1" in
+  up)
+    docker compose up
+    ;;
+  build)
+    docker compose build
+    ;;
+  console)
+    docker compose run --rm apco_service rails console
+    ;;
+  bash)
+    docker compose run --rm apco_service bash
+    ;;
+  test)
+    docker compose run --rm apco_service bin/rails test
+    ;;
+  rspec)
+    docker compose run --rm apco_service bundle exec rspec
+    ;;
+  redis-cli)
+    docker compose exec redis redis-cli
+    ;;
+  *)
+    echo "Usage: bin/docker-dev [command]"
+    echo "Commands:"
+    echo "  up      - Start the development environment"
+    echo "  build   - Rebuild the Docker images"
+    echo "  console - Run Rails console"
+    echo "  bash    - Start a bash shell"
+    echo "  test    - Run tests"
+    echo "  rspec   - Run RSpec tests"
+    echo "  redis-cli - Start Redis CLI"
+    ;;
+esac
