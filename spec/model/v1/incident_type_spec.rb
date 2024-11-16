@@ -9,13 +9,20 @@ RSpec.describe V1::IncidentType do
     ]
   end
 
+  let(:redis_double) { stub_redis_connection }
+
   before(:all) do
     FileUtils.mkdir_p(Rails.root.join('spec', 'fixtures'))
   end
 
   before(:each) do
-    # Clear Redis
-    $redis.flushdb
+    # Set up Redis stub expectations for specific tests
+    test_data.each do |data|
+      allow(redis_double).to receive(:get).with("incident_type:#{data['code']}")
+        .and_return(data.to_json)
+    end
+    allow(redis_double).to receive(:keys).with("incident_type:*")
+      .and_return(test_data.map { |d| "incident_type:#{d['code']}" })
 
     # Create test CSV file
     CSV.open(test_csv_path, 'w') do |csv|
