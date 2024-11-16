@@ -85,6 +85,6 @@ class AiCodeMapper
   }
 
   def self.call_type_to_apco_code(call_type)
-    MAGIC[call_type.gsub(/[^a-zA-Z0-9]/, '').upcase]
+    MAGIC[call_type.gsub(/[^a-zA-Z0-9]/, "").upcase]
   end
 end
