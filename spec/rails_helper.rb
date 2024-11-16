@@ -8,16 +8,6 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
   config.include Rails.application.routes.url_helpers
-
-  config.before(:suite) do
-    # Clear Redis database before the test suite runs
-    $redis.with { |redis| redis.flushdb }
-  end
-
-  config.before(:each) do
-    # Clear Redis before each test
-    $redis.with { |redis| redis.flushdb }
-  end
 end
 
 # spec/rails_helper.rb
