@@ -1,8 +1,10 @@
 # app/models/v1/incident_type.rb
 module V1
   class IncidentType
-    def self.redis_namespace
-      "V1"
+    VERSION = "V1:"
+
+    def self.cache_key(code)
+      "#{VERSION}#{code}"
     end
 
     def self.load_from_csv(file_path)
@@ -13,30 +15,35 @@ module V1
 
       loaded_count = 0
       CSV.foreach(file_path, headers: true) do |row|
-        code = row["code"]
-        next unless code
+        next if row["code"].blank?
 
-        key = "#{redis_namespace}:#{code}"
-        $redis.set(key, row.to_h.to_json)
+        key = cache_key(row["code"])
+        Rails.cache.write(key, row.to_h)
         loaded_count += 1
       end
 
-      Rails.logger.info "Loaded #{loaded_count} records into Redis"
       loaded_count
     end
 
     def self.all_codes
-      keys = $redis.keys("#{redis_namespace}:*")
-      keys.map { |key| key.split(":").last }
+      memory_store = Rails.cache.instance_variable_get(:@data)
+      return [] unless memory_store
+
+      memory_store.keys
+                 .select { |k| k.start_with?(VERSION) }
+                 .map { |key| key.sub(VERSION, "") }
     end
 
     def self.find_by_code(code)
-      data = $redis.get("#{redis_namespace}:#{code}")
-      data ? JSON.parse(data) : nil
+      Rails.cache.read(cache_key(code))
     end
 
     def self.find_by_call_type(type)
       self.find_by_code(::AiCodeMapper.call_type_to_apco_code(type))
+    end
+
+    def cache_key(code)
+      self.class.cache_key(code)
     end
   end
 end

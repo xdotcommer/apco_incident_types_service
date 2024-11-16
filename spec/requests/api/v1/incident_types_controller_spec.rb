@@ -14,14 +14,6 @@ RSpec.describe "API V1 IncidentTypes", type: :request do
   end
 
   before(:each) do
-    redis_double = stub_redis_connection
-    test_data.each do |data|
-      allow(redis_double).to receive(:get).with("incident_type:#{data['code']}")
-        .and_return(data.to_json)
-    end
-    allow(redis_double).to receive(:keys).with("incident_type:*")
-      .and_return(test_data.map { |d| "incident_type:#{d['code']}" })
-
     # Create and load test data
     CSV.open(test_csv_path, 'w') do |csv|
       csv << test_data.first.keys
