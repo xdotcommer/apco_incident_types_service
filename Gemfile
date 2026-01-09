@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-gem "rails", "~> 8.0.0"
+gem "rails", "~> 8.1.2"
 gem "redis", ">= 4.0.1"
 gem "puma"
 
